@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利用規約・プライバシーポリシー | [SDC]</title>
+    <style>
+        :root {
+            --primary: #5865F2;
+            --danger: #ed4245;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text-main: #24292f;
+            --text-muted: #57606a;
+            --border: #d0d7de;
+            --overlay: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 16px;
+            scroll-behavior: smooth;
+        }
+
+        .wrapper {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .meta {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+
+        li strong {
+            display: inline-block;
+            width: 160px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .link-text {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link-text:hover {
+            text-decoration: underline;
+        }
+
+        .callout {
+            background: #fff8c6;
+            border: 1px solid rgba(212,167,44,0.4);
+            padding: 16px;
+            border-radius: 6px;
+            color: #735c0f;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .danger-callout {
+            background: #ffebe9;
+            border: 1px solid rgba(255,129,130,0.4);
+            color: #cf222e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Menu Styles */
+        .menu-trigger {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        
+        .menu-trigger:hover { transform: scale(1.1); }
+        
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay);
+            display: none;
+            z-index: 1001;
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-content {
+            position: fixed;
+            bottom: 100px;
+            left: 30px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            width: 220px;
+            display: none;
+            z-index: 1002;
+        }
+
+        .nav-content a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .nav-content a:hover {
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        .is-open { display: block !important; }
+        
+        @media (max-width: 600px) {
+            .card { padding: 24px 20px; }
+            li strong { display: block; width: auto; margin-bottom: 4px; }
+            h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <header>
+            <h1>利用規約・プライバシーポリシー</h1>
+            <div class="meta">最終更新日: 2026年3月11日 • [SDC] 運営チーム</div>
+        </header>
+
+        <article>
+            <section class="card" id="guideline">
+                <h2>1. 利用ガイドライン</h2>
+                <p>本規約は、[SDC]（以下「本Bot」）の利用者（以下「ユーザー」）と運営者との間の利用条件を定めるものです。</p>
+                <ul>
+                    <li><strong>プラットフォーム規約</strong> ユーザーは、本Botの利用にあたり、<a href="https://discord.com/terms" target="_blank" class="link-text">Discord利用規約</a>および<a href="https://discord.com/guidelines" target="_blank" class="link-text">コミュニティガイドライン</a>を遵守するものとします。</li>
+                    <li><strong>誠実な利用</strong> 他のユーザーの利用を妨げる行為、公序良俗に反する行為、または運営を妨害する行為を行わないでください。</li>
+                    <li><strong>サービスの提供</strong> 本Botは非営利または限定的な目的で提供されるものであり、運営者は継続的な提供を保証しません。</li>
+                </ul>
+            </section>
+
+            <section class="card" id="prohibited">
+                <h2>2. 禁止事項</h2>
+                <p>以下の行為を固く禁じます。違反を確認した場合、運営者は予告なくアクセス制限、またはブラックリストへの登録を行うことができます。</p>
+                <ul>
+                    <li><strong>リソースへの攻撃</strong> Botの過度なメンション、コマンドの連投（スパム）、サーバーへの負荷をかける行為。</li>
+                    <li><strong>不当な解析</strong> 本Botのプログラムの複製、修正、リバースエンジニアリング、または脆弱性を突いた攻撃。</li>
+                    <li><strong>なりすまし</strong> 運営者または第三者を装い、情報を詐取する行為。</li>
+                    <li><strong>権利侵害</strong> 本Botを通じて、第三者のプライバシー、著作権、名誉を損なう投稿やデータの取得を行う行為。</li>
+                </ul>
+            </section>
+
+            <section class="card" id="disclaimer">
+                <h2>3. 免責事項</h2>
+                <div class="callout danger-callout">
+                    <strong>重要：</strong>本Botは「現状有姿（As-is）」で提供されます。運営者は、エラーの不存在、安全性の確保、および特定の目的への適合性について一切保証しません。
+                </div>
+                <ul>
+                    <li><strong>自己責任原則</strong> 本Botの利用により発生した損害（データ消失、サーバーの設定破壊、人間関係のトラブル等）について、運営者は一切の法的責任を負いません。</li>
+                    <li><strong>仕様の変更</strong> 運営者は予告なく、本Botの機能の追加、変更、中断、または終了を行う権利を有します。</li>
+                    <li><strong>準拠法・管轄</strong> 本規約の解釈にあたっては日本法を準拠法とし、紛争が生じた場合は、運営者の所在地を管轄する裁判所を第一審の専属的合意管轄裁判所とします。</li>
+                </ul>
+            </section>
+
+            <section class="card" id="privacy">
+                <h2>4. プライバシーポリシー</h2>
+                <p>本Botは、Discord APIを通じて取得される最小限の情報のみを利用します。</p>
+                <ul>
+                    <li><strong>取得データ</strong> ユーザーID、サーバーID、ロール情報、およびコマンド実行に必要なメッセージ内容。</li>
+                    <li><strong>利用目的</strong> サーバー固有の設定の保存、コマンド応答の生成、およびスパム等の不正対策。</li>
+                    <li><strong>第三者提供</strong> 法令に基づく場合を除き、取得したデータを第三者に提供することはありません。</li>
+                    <li><strong>データの削除</strong> サーバーから本Botをキック（追放）した場合、そのサーバーに関連するデータは一定期間を経て自動的に破棄されます。詳細な削除依頼は<a href="https://discord.gg/gbz4bQp2xM" class="link-text">サポートサーバー</a>まで。</li>
+            </section>
+            
+            <section class="card" id="Introduce">
+  <h2>5. Bot導入方法</h2>
+  <p>本Botは、どなたでも自由にご利用いただけます。導入を希望される方は、以下の手順に沿って手続きを行ってください。</p>
+  <ul> 
+    <li>
+      <strong>招待リンクへのアクセス</strong>
+      <a href="https://discord.com/oauth2/authorize?client_id=1473754857054929149&permissions=8&integration_type=0&scope=bot" class="link-text">こちらの招待リンク</a>から認証画面を開きます。
+    </li>
+    <li>
+      <strong>導入サーバーの選択</strong>
+      Botを追加したいサーバーを選択し、必要な権限を確認した上で承認ボタンを押してください。
+    </li>
+    <li>
+      <strong>セットアップ完了</strong>
+      承認後、対象のサーバーにBotが参加していれば導入は完了です。
+    </li>
+  </ul>
+</section>
+
+        </article>
+
+        <footer>
+            <p>&copy; 2026 [sk / shyder]. Built with transparency.</p>
+            <p>ご不明点は <a href="https://discord.gg/gbz4bQp2xM" class="link-text">サポートサーバー</a> または <a href="お問い合わせのURL" class="link-text">お問い合わせ</a> まで。</p>
+        </footer>
+    </div>
+
+    <div class="menu-trigger" onclick="toggleMenu()" title="メニューを開く">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </div>
+
+    <div class="nav-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <nav class="nav-content" id="navContent">
+        <a href="#guideline" onclick="toggleMenu()">1. ガイドライン</a>
+        <a href="#prohibited" onclick="toggleMenu()">2. 禁止事項</a>
+        <a href="#disclaimer" onclick="toggleMenu()">3. 免責事項</a>
+        <a href="#privacy" onclick="toggleMenu()">4. プライバシー</a>
+        <a href="#Introduce" onclick="toggleMenu()">5. Botの導入方法</a>
+    </nav>
+
+    <script>
+        function toggleMenu() {
+            const overlay = document.getElementById('overlay');
+            const content = document.getElementById('navContent');
+            overlay.classList.toggle('is-open');
+            content.classList.toggle('is-open');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: target.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
