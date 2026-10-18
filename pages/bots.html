@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f6">
+  <meta name="description" content="SDCが提供する無料Discord Botの紹介、導入方法、コマンド一覧、サポート情報。">
+  <title>Discord Bot | SDC — Social Design Collective</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/site.js" defer></script>
+  <style>
+    .bots-intro{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}
+    .bots-intro h2{margin:8px 0 0;font-size:clamp(26px,3.5vw,38px);letter-spacing:-.045em;line-height:1.35}
+    .bots-intro p{max-width:440px;margin:0;color:var(--muted);font-size:13px}
+    .bots-track{display:grid;grid-auto-columns:minmax(270px,330px);grid-auto-flow:column;gap:18px;overflow-x:auto;padding:4px 3px 20px;scroll-snap-type:x mandatory;overscroll-behavior-inline:contain;scrollbar-color:#b8c9bc transparent;scrollbar-width:thin}
+    .bot-card{height:410px;perspective:1200px;scroll-snap-align:start}
+    .bot-card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+    .bot-card.is-flipped .bot-card-inner{transform:rotateY(180deg)}
+    .bot-face{position:absolute;inset:0;width:100%;height:100%;padding:25px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:0 8px 28px rgba(29,48,39,.05);backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:left;color:var(--ink)}
+    button.bot-face{font:inherit;cursor:pointer}
+    .bot-face:focus-visible{outline:3px solid #88a997;outline-offset:4px}
+    .bot-front{display:flex;flex-direction:column;align-items:flex-start}
+    .bot-icon{display:grid;place-items:center;width:90px;height:90px;overflow:hidden;border:1px solid var(--line);border-radius:24px;background:var(--pale);color:var(--green);font-size:25px;font-weight:800}
+    .bot-icon img{width:100%;height:100%;object-fit:cover}
+    .bot-label{margin-top:25px;color:var(--green);font-size:10px;font-weight:800;letter-spacing:.14em}
+    .bot-name{margin:7px 0 10px;font-size:25px;line-height:1.3;letter-spacing:-.04em}
+    .bot-description{margin:0;color:var(--muted);font-size:13px;line-height:1.9}
+    .bot-flip-hint{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:auto;padding-top:20px;color:var(--green);font-size:12px;font-weight:750}
+    .bot-back{display:flex;flex-direction:column;transform:rotateY(180deg)}
+    .bot-back-top{display:flex;align-items:center;gap:12px;padding-bottom:17px;border-bottom:1px solid var(--line)}
+    .bot-back .bot-icon{width:48px;height:48px;border-radius:14px;flex-shrink:0;font-size:16px}
+    .bot-back .bot-icon img{width:100%;height:100%;object-fit:cover}
+    .bot-back .bot-name{margin:0;font-size:18px}
+    .bot-back h4{margin:19px 0 10px;font-size:13px}
+    .bot-commands{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+    .bot-commands li{display:grid;gap:2px;padding:10px 12px;border-radius:10px;background:#f3f5f2}
+    .bot-commands code{color:var(--green-dark);font-size:12px;font-weight:750;overflow-wrap:anywhere}
+    .bot-commands span{color:var(--muted);font-size:11px;line-height:1.65}
+    .bot-card-actions{display:flex;gap:8px;margin-top:auto;padding-top:15px}
+    .bot-action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;border:1px solid #cbd8ce;border-radius:999px;background:transparent;color:var(--green);font-size:11px;font-weight:750;cursor:pointer}
+    .bot-action.primary{background:var(--green);border-color:var(--green);color:#fff}
+    .bot-action:hover{opacity:.8}
+    .bots-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:4px}
+    .bots-controls p{margin:0;color:var(--muted);font-size:12px}
+    .bots-arrows{display:flex;gap:8px}
+    .bots-arrows button{width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--green);cursor:pointer}
+    .bots-arrows button:hover{background:var(--pale)}
+    .bots-empty{padding:30px;border:1px dashed var(--line);border-radius:18px;color:var(--muted)}
+    .bot-detail-dialog{width:min(620px,calc(100% - 28px));max-height:85vh;padding:0;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--ink);box-shadow:0 25px 90px #0002}
+    .bot-detail-dialog::backdrop{background:#14221db3;backdrop-filter:blur(4px)}
+    .bot-detail-content{padding:28px}
+    .bot-detail-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .bot-detail-heading h2{margin:0;font-size:25px}
+    .bot-detail-close{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;font-size:20px}
+    .bot-detail-body{margin-top:20px;color:var(--muted);font-size:13px;line-height:2;white-space:pre-line}
+    .bot-detail-body h3{margin:20px 0 8px;color:var(--ink);font-size:15px}
+    .bot-detail-body ul{padding-left:20px}
+    .bot-detail-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+    .bot-detail-links a{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;border:1px solid #cbd8ce;border-radius:999px;color:var(--green);font-size:12px;font-weight:750}
+    .bot-detail-links a.primary{background:var(--green);color:#fff}
+    .bot-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:24px}
+    .bot-info-item{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+    .bot-info-item strong{display:block;margin-bottom:7px;font-size:14px}
+    .bot-info-item p{margin:0;color:var(--muted);font-size:12px}
+    .bot-steps{counter-reset:bot-step;display:grid;gap:12px;margin-top:24px}
+    .bot-step{display:flex;gap:15px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
+    .bot-step::before{counter-increment:bot-step;content:counter(bot-step,decimal-leading-zero);color:var(--green);font-size:12px;font-weight:800}
+    .bot-step strong{display:block;margin-bottom:4px;font-size:13px}
+    .bot-step p{margin:0;color:var(--muted);font-size:12px}
+    .bot-support{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:30px;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
+    .bot-support h2{margin:8px 0;font-size:25px;letter-spacing:-.035em}
+    .bot-support p{margin:0;color:var(--muted);font-size:13px}
+    .bot-support .button{flex-shrink:0}
+    @media(max-width:700px){
+      .bots-intro{align-items:flex-start;flex-direction:column}
+      .bots-track{grid-auto-columns:minmax(260px,85%)}
+      .bot-card{height:420px}
+      .bot-info-grid{grid-template-columns:1fr}
+      .bot-support{align-items:flex-start;flex-direction:column}
+      .bot-detail-content{padding:22px}
+    }
+    @media(prefers-reduced-motion:reduce){.bot-card-inner{transition:none}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="SDC ホーム">
+        <span class="brand-mark"><img src="../assets/images/sdc-icon.svg" alt="" data-fallback-text="SDC"></span>
+        <span class="brand-copy"><strong>SDC</strong><small>Social Design Collective</small></span>
+      </a>
+      <button class="menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="global-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="global-nav" aria-label="メインナビゲーション">
+        <a href="../index.html">ホーム</a>
+        <a href="about.html">SDCについて</a>
+        <a href="activities.html">活動内容</a>
+        <a href="teams.html">チーム紹介</a>
+        <a href="bots.html" aria-current="page">Bot紹介</a>
+        <a href="news.html">お知らせ</a>
+        <a class="nav-cta" href="contact.html">お問い合わせ ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Discord Bots</span>
+        <h1>毎日のDiscordを、<br>もっと便利に。</h1>
+        <p>SDCが提供するDiscord Botを紹介します。すべて無料で利用でき、導入方法やコマンドもこのページから確認できます。</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="bots-intro">
+          <div>
+            <span class="eyebrow">Bot Collection</span>
+            <h2>あなたに合うBotを見つける。</h2>
+          </div>
+          <p>カードを選ぶとコマンドの概要が表示されます。詳しい機能や導入先は、カードの裏面から確認してください。</p>
+        </div>
+
+        <div class="bots-track" id="bots-track" aria-label="Discord Bot一覧"></div>
+        <div class="bots-controls">
+          <p>カードを横にスライドして確認できます。</p>
+          <div class="bots-arrows">
+            <button type="button" id="bots-prev" aria-label="前のBot">←</button>
+            <button type="button" id="bots-next" aria-label="次のBot">→</button>
+          </div>
+        </div>
+
+        <div style="margin-top:76px">
+          <span class="eyebrow">How to Install</span>
+          <h2 style="margin:10px 0 0;font-size:clamp(26px,3.5vw,38px);letter-spacing:-.045em">導入はかんたん、3ステップ。</h2>
+          <div class="bot-steps">
+            <div class="bot-step">
+              <div><strong>使いたいBotを選ぶ</strong><p>上のカードからBotの機能やコマンドを確認します。</p></div>
+            </div>
+            <div class="bot-step">
+              <div><strong>Botをサーバーに招待する</strong><p>Botの詳細画面にある招待リンクを開き、追加先のサーバーと必要な権限を確認して認証します。招待リンクが未設定のBotは、管理者にお問い合わせください。</p></div>
+            </div>
+            <div class="bot-step">
+              <div><strong>コマンドを使ってみる</strong><p>サーバーに追加できたら、各Botのコマンド一覧を確認して利用を開始します。コマンドの利用条件はBotごとに異なります。</p></div>
+            </div>
+          </div>
+          <div class="bot-info-grid">
+            <div class="bot-info-item"><strong>利用料金は無料</strong><p>SDCが紹介するBotは無料で利用できます。個別の利用条件がある場合は、各Botの詳細をご確認ください。</p></div>
+            <div class="bot-info-item"><strong>サーバー管理者の方へ</strong><p>招待時には権限を確認し、必要な権限だけを許可してください。</p></div>
+            <div class="bot-info-item"><strong>困ったときは</strong><p>導入やコマンドの使い方については、SDCのサポートDiscordでご相談ください。</p></div>
+          </div>
+        </div>
+
+        <section style="margin-top:76px" aria-labelledby="bot-support-title">
+          <div class="bot-support">
+            <div>
+              <span class="eyebrow">Support Discord</span>
+              <h2 id="bot-support-title">困ったときは、こちらへ。</h2>
+              <p>Botの導入方法や不具合、使い方について相談できます。</p>
+            </div>
+            <a class="button" id="support-link" href="https://discord.com/" target="_blank" rel="noopener noreferrer">サポートDiscordへ ↗</a>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a class="brand" href="../index.html" aria-label="SDC ホーム">
+          <span class="brand-mark"><img src="../assets/images/sdc-icon.svg" alt="" data-fallback-text="SDC"></span>
+          <span class="brand-copy"><strong>SDC</strong><small>Social Design Collective</small></span>
+        </a>
+        <nav class="footer-links" aria-label="フッターナビゲーション">
+          <a href="../index.html">ホーム</a>
+          <a href="about.html">SDCについて</a>
+          <a href="activities.html">活動内容</a>
+          <a href="teams.html">チーム紹介</a>
+          <a href="bots.html">Bot紹介</a>
+          <a href="contact.html">お問い合わせ</a>
+          <a href="privacy.html">プライバシーポリシー</a>
+        </nav>
+      </div>
+      <p class="footer-copy">© SDC — Social Design Collective</p>
+    </div>
+  </footer>
+
+  <dialog class="bot-detail-dialog" id="bot-detail-dialog" aria-labelledby="bot-detail-title">
+    <div class="bot-detail-content">
+      <div class="bot-detail-heading">
+        <h2 id="bot-detail-title">Botの詳細</h2>
+        <button class="bot-detail-close" type="button" id="bot-detail-close" aria-label="閉じる">×</button>
+      </div>
+      <div class="bot-detail-body" id="bot-detail-body"></div>
+      <div class="bot-detail-links" id="bot-detail-links"></div>
+    </div>
+  </dialog>
+
+  <script>
+    /*
+      Botの登録・変更は、この配列を編集してください。
+      icon: アイコン画像の相対パス、または画像URL
+      inviteUrl: Discordへの招待URL
+      supportUrl: サポートページや案内ページなどのURL
+      commands: 裏面に表示するコマンド概要
+      details: 詳細画面に表示する説明
+    */
+    const SUPPORT_URL = "https://discord.gg/REPLACE_ME";
+
+    const bots = [
+      {
+        id: "bot-01",
+        name: "SDC",
+        icon: "../assets/images/sdc-icon.svg",
+        description:
+        "サーバー管理をこれ1つでスマートに！" +
+        // "ああ",
+        inviteUrl: "https://discord.com/oauth2/authorize?client_id=1473754857054929149&permissions=8&integration_type=0&scope=bot",
+        supportUrl: SUPPORT_URL,
+        commands: [
+          { command: "/verify", description: "参加時に簡単な認証をクリアしないとチャンネルを閲覧できないようにし、荒らしユーザーとBOTの侵入を防ぎます。" },
+          { command: "/exp", description: "ユーザーがチャットするだけで経験値が自動で溜まる仕組みを管理します。" },
+          { command: "/outword", description: "指定した禁止ワードを発言したユーザーを自動でタイムアウト、手動で解除 BAN をする機能を管理します。" },
+        ],
+        details: "複数のBOTを使い分ける必要がなくなるため、コマンドの覚える負担や権限管理の手間が大幅に減ります。\n難しい設定は不要！スラッシュコマンド( / )で、誰でも簡単に直感的に操作できます。",
+        features: [
+          "サーバーの運営にかかる手間を最小限にし、安全で居心地の良いコミュニティ環境を作るための万能型BOTです。具体的な用途に合わせて以下のような機能が活躍します。",
+          "サーバー導入時には管理者(Administrator)権限が必要となります。管理対象となるメンバーや他のロールよりも上位の階層に配置されている必要があります。位置が低い場合、タイムアウトやロール付与が正常に動作しません。",
+          "問い合わせは、公式Discordサーバーまで！",
+        ]
+      },
+
+      {
+        id: "bot-02",
+        name: "ぴよりん",
+        icon: "../assets/images/bots/piyorin.svg",
+        description: "こんなコマンドあったらいいな…。に最適！",
+        inviteUrl: "https://discord.com/oauth2/authorize?client_id=1543187422538502154&permissions=8&integration_type=0&scope=bot",
+        supportUrl: SUPPORT_URL,
+        commands: [
+          { command: "/icon", description: "指定したユーザーのアイコンをダウンロードできます。" },
+          { command: "/say", description: "指定したユーザーになりすまして自由にチャットできます。" },
+          { command: "/who", description: "ユーザーIDからユーザー名と表示名を特定します。" },
+          // { command: "/haihu", description: "自由に配布できます。受取履歴を取ることも！" },
+        ],
+        details: "欲しいコマンドがあれば公式Discordサーバーまで！",
+        features: [
+          "一言で表すのであれば、某猫型ロボット",
+          "設定が面倒だったので、サーバー導入時には管理者(Administrator)権限が必要にしてあります。必要に応じてURLまたはBOT権限を修正してください。"
+        ]
+      },      
+
+      
+      {
+        id: "bot-03",
+        name: "ちょびりん",
+        icon: "../assets/images/bots/chobirin.svg",
+        description: "音楽をVCで再生して盛り上がろう！",
+        inviteUrl: "https://discord.com/oauth2/authorize?client_id=1552015823651082333&permissions=8&integration_type=0&scope=bot",
+        supportUrl: SUPPORT_URL,
+        commands: [
+          { command: "+music", description: "コマンド一覧を表示します。" },
+          { command: "+play", description: "URL 文字 で曲名を探します。" },
+          { command: "…", description: "適当でもOK！(例: テンションが上がる曲)" }
+        ],
+        details: "同時接続はできない。VCから自動で退出できないのでご注意ください。",
+        features: [
+          "音楽BOT",
+          "設定が面倒だったので、サーバー導入時には管理者(Administrator)権限が必要にしてあります。必要に応じてURLまたはBOT権限を修正してください。"
+        ]
+      },
+      
+    ];
+    // 別のBotも同じ形式で追加できます。カードは自動的に横へ増えていきます。
+
+    const track = document.getElementById("bots-track");
+    const dialog = document.getElementById("bot-detail-dialog");
+    const detailTitle = document.getElementById("bot-detail-title");
+    const detailBody = document.getElementById("bot-detail-body");
+    const detailLinks = document.getElementById("bot-detail-links");
+
+    document.getElementById("support-link").href = SUPPORT_URL;
+
+    function createIcon(bot, compact = false) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "bot-icon";
+      const img = document.createElement("img");
+      img.src = bot.icon;
+      img.alt = bot.name + "のアイコン";
+      img.loading = "lazy";
+      img.onerror = () => {
+        wrapper.textContent = bot.name.trim().slice(0, 2).toUpperCase();
+      };
+      wrapper.appendChild(img);
+      return wrapper;
+    }
+
+    function createAction(label, callback, primary = false) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "bot-action" + (primary ? " primary" : "");
+      button.textContent = label;
+      button.addEventListener("click", callback);
+      return button;
+    }
+
+    function openDetails(bot) {
+      detailTitle.textContent = bot.name;
+      detailBody.replaceChildren();
+
+      const description = document.createElement("p");
+      description.textContent = bot.details;
+      detailBody.appendChild(description);
+
+      const heading = document.createElement("h3");
+      heading.textContent = "主な機能";
+      detailBody.appendChild(heading);
+
+      const list = document.createElement("ul");
+      (bot.features || []).forEach(feature => {
+        const item = document.createElement("li");
+        item.textContent = feature;
+        list.appendChild(item);
+      });
+      detailBody.appendChild(list);
+
+      const commandHeading = document.createElement("h3");
+      commandHeading.textContent = "コマンド一覧";
+      detailBody.appendChild(commandHeading);
+
+      const commandList = document.createElement("ul");
+      (bot.commands || []).forEach(item => {
+        const li = document.createElement("li");
+        const code = document.createElement("code");
+        code.textContent = item.command;
+        li.append(code, document.createTextNode(" — " + item.description));
+        commandList.appendChild(li);
+      });
+      detailBody.appendChild(commandList);
+
+      detailLinks.replaceChildren();
+
+      if (bot.inviteUrl) {
+        const invite = document.createElement("a");
+        invite.href = bot.inviteUrl;
+        invite.target = "_blank";
+        invite.rel = "noopener noreferrer";
+        invite.className = "primary";
+        invite.textContent = "Botを招待する ↗";
+        detailLinks.appendChild(invite);
+      }
+
+      const support = document.createElement("a");
+      support.href = bot.supportUrl || SUPPORT_URL;
+      support.target = "_blank";
+      support.rel = "noopener noreferrer";
+      support.textContent = "サポートを開く ↗";
+      detailLinks.appendChild(support);
+
+      if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+      } else {
+        alert(bot.name + "\n\n" + bot.details);
+      }
+    }
+
+    function createCard(bot) {
+      const card = document.createElement("article");
+      card.className = "bot-card";
+      card.setAttribute("aria-label", bot.name);
+
+      const inner = document.createElement("div");
+      inner.className = "bot-card-inner";
+
+      const front = document.createElement("button");
+      front.type = "button";
+      front.className = "bot-face bot-front";
+      front.setAttribute("aria-label", bot.name + "のコマンド概要を表示");
+      front.appendChild(createIcon(bot));
+
+      const label = document.createElement("span");
+      label.className = "bot-label";
+      label.textContent = "SDC DISCORD BOT";
+
+      const name = document.createElement("h3");
+      name.className = "bot-name";
+      name.textContent = bot.name;
+
+      const description = document.createElement("p");
+      description.className = "bot-description";
+      description.textContent = bot.description;
+
+      const hint = document.createElement("span");
+      hint.className = "bot-flip-hint";
+      hint.innerHTML = "<span>コマンドを見る</span><span aria-hidden=\"true\">↗</span>";
+
+      front.append(label, name, description, hint);
+
+      const back = document.createElement("div");
+      back.className = "bot-face bot-back";
+
+      const top = document.createElement("div");
+      top.className = "bot-back-top";
+      top.appendChild(createIcon(bot, true));
+
+      const topName = document.createElement("h3");
+      topName.className = "bot-name";
+      topName.textContent = bot.name;
+      top.appendChild(topName);
+
+      const commandHeading = document.createElement("h4");
+      commandHeading.textContent = "おすすめのコマンド";
+
+      const commandList = document.createElement("ul");
+      commandList.className = "bot-commands";
+
+      (bot.commands || []).slice(0, 3).forEach(item => {
+        const li = document.createElement("li");
+        const code = document.createElement("code");
+        const desc = document.createElement("span");
+        code.textContent = item.command;
+        desc.textContent = item.description;
+        li.append(code, desc);
+        commandList.appendChild(li);
+      });
+
+      const actions = document.createElement("div");
+      actions.className = "bot-card-actions";
+      actions.append(
+        createAction("詳細を見る", () => openDetails(bot), true),
+        createAction("表に戻る", () => flipCard(false))
+      );
+
+      function flipCard(force) {
+        const flipped = typeof force === "boolean" ? force : !card.classList.contains("is-flipped");
+        card.classList.toggle("is-flipped", flipped);
+        front.setAttribute("aria-pressed", String(flipped));
+      }
+
+      front.addEventListener("click", () => flipCard(true));
+      back.addEventListener("click", event => {
+        if (event.target === back || event.target === top || event.target === commandHeading) {
+          flipCard(false);
+        }
+      });
+
+      back.append(top, commandHeading, commandList, actions);
+      inner.append(front, back);
+      card.appendChild(inner);
+      return card;
+    }
+
+    bots.forEach(bot => track.appendChild(createCard(bot)));
+
+    document.getElementById("bots-prev").addEventListener("click", () => {
+      track.scrollBy({ left: -track.clientWidth * 0.85, behavior: "smooth" });
+    });
+
+    document.getElementById("bots-next").addEventListener("click", () => {
+      track.scrollBy({ left: track.clientWidth * 0.85, behavior: "smooth" });
+    });
+
+    document.getElementById("bot-detail-close").addEventListener("click", () => {
+      dialog.close();
+    });
+
+    dialog.addEventListener("click", event => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    if (bots.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "bots-empty";
+      empty.textContent = "現在、紹介できるBotはありません。";
+      track.appendChild(empty);
+    }
+  </script>
+</body>
+</html>
